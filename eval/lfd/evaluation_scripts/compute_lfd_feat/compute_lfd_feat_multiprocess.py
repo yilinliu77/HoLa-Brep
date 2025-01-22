@@ -16,7 +16,7 @@ import random
 from tqdm import tqdm
 from pathlib import Path
 from multiprocessing import Pool
-import kaolin as kal
+# import kaolin as kal
 import point_cloud_utils as pcu
 import trimesh
 

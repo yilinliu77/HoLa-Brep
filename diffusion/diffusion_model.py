@@ -363,7 +363,7 @@ class Diffusion_condition(nn.Module):
                 num_points = pc.shape[2]
                 index = np.arange(num_points)
                 np.random.shuffle(index)
-                pc = pc[:, 0, index[:2048]]
+                pc = pc[:, :, index[:2048]]
             assert pc.shape[2] == 2048
             points = pc[:, 0, :, :3]
             normals = pc[:, 0, :, 3:6]

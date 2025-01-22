@@ -33,6 +33,7 @@ ENV CUDA_HOME=/usr/local/cuda-12.4
 ENV PATH="${CUDA_HOME}/bin:${PATH}"
 ENV LD_LIBRARY_PATH="${CUDA_HOME}/lib64:${LD_LIBRARY_PATH}"
 ENV PATH="/opt/conda/bin:${PATH}"
+ENV FORCE_CUDA="1"
 
 WORKDIR /HoLa-Brep
 

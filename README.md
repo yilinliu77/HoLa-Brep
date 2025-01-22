@@ -110,7 +110,7 @@ bash scripts/generate_${TYPE}.sh
 ```
 Please export `TYPE` using one of the following options::
 + `pc`, `txt`, `sketch`, `svr` or `mvr` for conditioned generation.
-+ `uncond` for unconditional generation.
++ `unconditional` for unconditional generation.
 
 #### **Docker**
 If you are using **Docker**, you can generate models after `hola-brep` image is successfully built with this command:
@@ -120,10 +120,12 @@ export TYPE="your_intended_method_of_generation"
 docker run --rm -it \
     --gpus all \
     --name hola-brep \
+    --shm-size=24g \
     -p 8080:8080 \
-    -v /path/to/host/output/folder:/HoLa-Brep/outputs \
-    -v /path/to/host/data/folder:/HoLa-Brep/data \
-    -v /path/to/host/checkpoint/folder:/HoLa-Brep/ckpt \
+    -v /path/to/your/host/output/folder:/HoLa-Brep/outputs \
+    -v /path/to/your/host/data/folder:/HoLa-Brep/data \
+    -v /path/to/your/host/checkpoint/folder:/HoLa-Brep/ckpt \
+    # -v /path/to/dinov2:/root/.cache/torch/hub/checkpoints/dinov2_vitl14_reg4_pretrain.pth \
     hola-brep \
     bash scripts/generate_${TYPE}.sh
 ```
@@ -135,17 +137,18 @@ docker run --rm -it \
     --gpus all \
     --name hola-brep \
     -p 8080:8080 \
-    -v /path/to/host/output/folder:/HoLa-Brep/outputs \
-    -v /path/to/host/data/folder:/HoLa-Brep/data \
-    -v /path/to/host/checkpoint/folder:/HoLa-Brep/ckpt \
+    -v /path/to/your/host/output/folder:/HoLa-Brep/outputs \
+    -v /path/to/your/host/data/folder:/HoLa-Brep/data \
+    -v /path/to/your/host/checkpoint/folder:/HoLa-Brep/ckpt \
     hola-brep \
     bash scripts/generate_uncond.sh
 ```
+> If you encounter issues with loading DINOv2, please manually **[download](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth)** the model and mount it to your Docker. 
 
 ### 3. Post-Process
 After generation, the output is converted into a watertight CAD model through post-processing:
 ```
-export TYPE="type_of_the_generated_models"
+export TYPE="generation_type"
 bash script/postprocess.sh
 ```
 The available options for `TYPE` are the same as mentioned previously.
@@ -168,7 +171,7 @@ To evaluate conditioned results:
 
 1. Export the condition name
 ```
-export TYPE=""
+export TYPE="generation_type"
 ```
 `TYPE` can be `pc`, `txt`, `sketch`, `svr` or `mvr` as stated previously.
 
