@@ -8,10 +8,9 @@ import ray
 from PIL import Image
 from tqdm import tqdm
 
-sys.path.append('../../../')
-from src.brepnet.post.utils import export_edges
-from src.brepnet.diffusion_model import Diffusion_condition
-from src.brepnet.post.construct_brep import construct_brep_from_datanpz
+from diffusion.utils import export_edges
+from diffusion.diffusion_model import Diffusion_condition
+from construct_brep import construct_brep_from_datanpz
 
 import torch
 from lightning_fabric import seed_everything

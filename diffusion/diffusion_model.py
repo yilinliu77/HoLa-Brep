@@ -14,7 +14,7 @@ from einops import rearrange, reduce
 from diffusers import DDPMScheduler
 from tqdm import tqdm
 
-from thirdparty.Pointnet2_PyTorch.pointnet2_ops_lib.pointnet2_ops.pointnet2_modules import PointnetSAModuleMSG, \
+from pointnet2_ops.pointnet2_modules import PointnetSAModuleMSG, \
     PointnetFPModule
 from scipy.spatial.transform import Rotation
 
@@ -217,7 +217,7 @@ class Diffusion_condition(nn.Module):
         self.pad_method = v_conf["pad_method"]
 
         # self.ae_model = AutoEncoder_0925(v_conf)
-        model_mod = importlib.import_module("src.brepnet.model")
+        model_mod = importlib.import_module("diffusion.model")
         model_mod = getattr(model_mod, v_conf["autoencoder"])
         self.ae_model = model_mod(v_conf)
 
@@ -359,6 +359,12 @@ class Diffusion_condition(nn.Module):
         elif self.with_pc:
             pc = v_data["conditions"]["points"]
 
+            if pc.shape[2] > 2048:
+                num_points = pc.shape[2]
+                index = np.arange(num_points)
+                np.random.shuffle(index)
+                pc = pc[:, 0, index[:2048]]
+            assert pc.shape[2] == 2048
             points = pc[:, 0, :, :3]
             normals = pc[:, 0, :, 3:6]
             pc = torch.cat([points, normals], dim=-1)

@@ -14,7 +14,7 @@ from torch.utils.data import DataLoader
 from tqdm import tqdm
 import open3d as o3d
 from scipy.spatial.transform import Rotation
-from shared.common_utils import export_point_cloud, check_dir
+# from shared.common_utils import export_point_cloud, check_dir
 
 from typing import Final
 from einops import rearrange

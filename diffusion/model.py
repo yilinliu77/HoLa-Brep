@@ -13,7 +13,7 @@ from torch_geometric.nn import GATv2Conv
 from torch_scatter import scatter_mean
 import torchvision
 
-from src.brepnet.dataset import denormalize_coord1112
+from diffusion.dataset import denormalize_coord1112
 
 def add_timer(time_statics, v_attr, timer):
     if v_attr not in time_statics:

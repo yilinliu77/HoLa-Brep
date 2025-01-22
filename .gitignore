@@ -169,3 +169,10 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+#data and ckpt
+/ckpt
+/data
+/backup
+/python_repo
+/outputs

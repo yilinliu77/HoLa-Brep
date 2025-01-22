@@ -1,5 +1,4 @@
 import sys
-sys.path.append('../../../')
 from functools import partial
 import importlib
 from datetime import datetime
@@ -15,8 +14,8 @@ from einops import rearrange
 import numpy as np
 import open3d as o3d
 
-from src.brepnet.dataset import Diffusion_dataset
-from src.brepnet.post.utils import triangulate_shape, triangulate_face, export_edges
+from diffusion.dataset import Diffusion_dataset
+from diffusion.utils import triangulate_shape, triangulate_face, export_edges
 
 import os.path
 
@@ -89,10 +88,10 @@ class TrainDiffusion(pl.LightningModule):
         if not os.path.exists(self.log_root):
             os.makedirs(self.log_root)
 
-        dataset_mod = importlib.import_module("src.brepnet.dataset")
+        dataset_mod = importlib.import_module("diffusion.dataset")
         self.dataset_mod = getattr(dataset_mod, self.hydra_conf["dataset"]["name"])
 
-        model_mod = importlib.import_module("src.brepnet.diffusion_model")
+        model_mod = importlib.import_module("diffusion.diffusion_model")
         model_mod = getattr(model_mod, self.hydra_conf["model"]["name"])
         self.model = model_mod(self.hydra_conf["model"])
 
@@ -267,7 +266,7 @@ class TrainDiffusion(pl.LightningModule):
         return
 
 
-@hydra.main(config_name="train_diffusion.yaml", config_path="../../configs/brepnet/", version_base="1.1")
+@hydra.main(config_name="train_diffusion.yaml", config_path="./", version_base="1.1")
 def main(v_cfg: DictConfig):
     torch.backends.cudnn.benchmark = False
     torch.set_float32_matmul_precision("medium")
@@ -328,7 +327,10 @@ def main(v_cfg: DictConfig):
 
     if v_cfg["trainer"].evaluate:
         print(f"Resuming from {v_cfg['trainer'].resume_from_checkpoint}")
-        weights = torch.load(v_cfg["trainer"].resume_from_checkpoint, weights_only=False, map_location="cpu")["state_dict"]
+        weights = torch.load(v_cfg["trainer"].resume_from_checkpoint, weights_only=False, map_location="cpu")
+        print("Checkpoint state_dict keys:", weights["state_dict"].keys())
+        print("Model state_dict keys:", model.state_dict().keys())
+        weights = weights["state_dict"]
         weights = {k: v for k, v in weights.items() if "ae_model" not in k}
         # weights = {k: v for k, v in weights.items() if "camera_embedding" not in k}
         # weights = {k.replace("model.", ""): v for k, v in weights.items()}
