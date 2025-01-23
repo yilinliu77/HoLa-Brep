@@ -9,12 +9,9 @@ import numpy as np
 import trimesh
 
 from diffusion.utils import get_triangulations
-from check_valid import check_step_valid_soild
+from eval.check_valid import check_step_valid_soild
 from diffusion.utils import can_be_triangularized
 
-pkl = r"/mnt/d/uncond_results/1127/1127_730_li_120k_lfd.pkl"
-# pkl = r"/mnt/d/uncond_results/1106/1108_730_li_600k_30_lfd.pkl"
-output_path = r"/mnt/d/uncond_results/1127/1127_730_li_120k_lfd.png"
 
 
 def remove_outliers_zscore(data, threshold=3):

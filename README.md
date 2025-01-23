@@ -10,29 +10,26 @@
 
 > This repository is for the HoLa-Brep project. Given a B-rep model which consists of surfaces, (half-) curves and vertices, we design a novel holistic latent representation (HL-Rep) to encode both the continuous geometric properties over all primitives and their discrete topological relationships into one holistic latent space. Compared with existing methods, primitives in the holistic latent space are intrinsically consistent, which enables a more accurate and expressive B-rep generation.
 
-## About HoLa-Brep
-W.I.P
+# About HoLa-Brep
+WIP
 
 
+# Experiments
+## Preparation⚙️
+### 1. Envrionment 
+#### 🌟**Run with Docker**(Recommended)🌟
+There are two options for running the project using a Docker environment: 
 
-## Checkpoints
-Pre-trained checkpoints are available for **[download](https://somewhere)**. The file `ckpt.zip` should contain the following checkpoints:
+1. **[Download]()** the Docker image directly
 
-| Checkpoint                            | Description                                                   |
-| ------------------------------------- | ------------------------------------------------------------- |
-| AE_ABC_1100k.ckpt                     | Autoencoder pre-trained on ABC dataset                        |
-| AE_deepcad_1100k.ckpt                 | Autoencoder pre-trained on deepcad dataset                    |
-| Diffusion_uncond_1100k.ckpt           | Pre-trained unconditional latent diffusion model              |
-| Diffusion_mvr_sq30_800k.ckpt          | Pre-trained multi-image-conditioned latent diffusion model    |
-| Diffusion_pc_sq30_1600k.ckpt          | Pre-trained point-conditioned latent diffusion model          |
-| Diffusion_pc_sq30_noisy_2300k.ckpt    | ****************************WIP****************************   |
-| Diffusion_sketch_sq30_1500k.ckpt      | Pre-trained sketch-conditioned latent diffusion model         |
-| Diffusion_svr_sq30_1500k.ckpt         | Pre-trained single-image-conditioned latent diffusion model   |
-| Diffusion_txt_sq30_1000k.ckpt         | Pre-trained text-conditioned latent diffusion model           |
+2. Or, you can manually build the Docker image:
 
+```
+docker build -t hola-brep .
+```
+> Some errors may occur when installing `pointnet2_ops_lib` if you choose to build the image manully. You may find a solution to these issues [here](./pointnet2_ops_lib/Possible_solution.md).
 
-## Environment Preparation
-### Run locally 
+#### **Run locally**
 We built the project based on **Linux** environment.
 
 1. Install Linux dependencies:
@@ -48,17 +45,29 @@ conda env create -f environment.yml
 conda activate HoLa-Brep
 ```
 
-### Run with Docker
-If you prefer to run the project inside a Docker environment instead of a local setup, follow the steps below. 
+### 2. Checkpoints
 
-First, build the necessary Docker image named `hola-brep`:
+Pre-trained checkpoints are available for **[download](https://somewhere)**. The file `ckpt.zip` should contain the following checkpoints:
 
-```
-docker build -t hola-brep .
-```
-> Some errors may occur when installing `pointnet2_ops_lib`. You may find solutions to these issues [here](./pointnet2_ops_lib/Possible_solution.md).
+| Checkpoint                            | Description                                                   |
+| ------------------------------------- | ------------------------------------------------------------- |
+| AE_ABC_1100k.ckpt                     | Autoencoder pre-trained on ABC dataset                        |
+| AE_deepcad_1100k.ckpt                 | Autoencoder pre-trained on deepcad dataset                    |
+| Diffusion_uncond_1100k.ckpt           | Pre-trained unconditional latent diffusion model              |
+| Diffusion_mvr_sq30_800k.ckpt          | Pre-trained multi-image-conditioned latent diffusion model    |
+| Diffusion_pc_sq30_1600k.ckpt          | Pre-trained point-conditioned latent diffusion model          |
+| Diffusion_pc_sq30_noisy_2300k.ckpt    | Pre-trained point-conditioned latent diffusion model with noisy   |
+| Diffusion_sketch_sq30_1500k.ckpt      | Pre-trained sketch-conditioned latent diffusion model         |
+| Diffusion_svr_sq30_1500k.ckpt         | Pre-trained single-image-conditioned latent diffusion model   |
+| Diffusion_txt_sq30_1000k.ckpt         | Pre-trained text-conditioned latent diffusion model           |
 
-`organized_data` variable contains the necessary data for conditioned generation, as well as the model itself.
+If you are running the project locally, please unzip the `ckpt.zip` file directly into the **root folder**. 
+
+### 3. Data
+
+You can download the data zip file `data.zip` from **[here]()**. It contains two folders: `organized_data`, `data_index` and `data_lfd_feat`.
+
++ `organized_data` variable contains the necessary data for conditioned generation, as well as the model itself.
 
 ```
 organized_data
@@ -72,11 +81,10 @@ organized_data
 |   `-- text_feat.npy
 |...
 ```
-`data_index` holds the index files of the models designated for the training, validation, and testing sets.
++ `data_index` holds the index files of the models designated for the training, validation, and testing sets.
++ `data_lfd_feat` holds the light-field-distance features of every model in `organized_data`.
 
-### 2. Checkpoints Preparation
-After downloading the checkpoints as detailed in the [Checkpoints](#checkpoints) section, unzip the `ckpt.zip` file directly into the **root folder**. 
-
+### 4. **Preparation check**
 If you are running the project **locally**, the project folder structure should then appear as follows now:
 ```
 HoLa-Brep
@@ -100,8 +108,9 @@ HoLa-Brep
 
 If you are using **Docker** for the project, further details will be provided in the next steps.
 
-### 3. Generate
-#### **Local**
+
+## Generation 🪄
+### **Local**
 To generate B-Rep models, you can use the following commands:
 
 ```
@@ -112,7 +121,7 @@ Please export `TYPE` using one of the following options::
 + `pc`, `txt`, `sketch`, `svr` or `mvr` for conditioned generation.
 + `unconditional` for unconditional generation.
 
-#### **Docker**
+### **Docker**🐋
 If you are using **Docker**, you can generate models after `hola-brep` image is successfully built with this command:
 
 ```
@@ -131,6 +140,8 @@ docker run --rm -it \
 ```
 The available options for `TYPE` are the same as mentioned previously.
 
+> If you encounter issues with loading DINOv2, please manually **[download](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth)** the model and mount it to your Docker. 
+
 For example:
 ```
 docker run --rm -it \
@@ -143,9 +154,9 @@ docker run --rm -it \
     hola-brep \
     bash scripts/generate_uncond.sh
 ```
-> If you encounter issues with loading DINOv2, please manually **[download](https://dl.fbaipublicfiles.com/dinov2/dinov2_vitl14/dinov2_vitl14_reg4_pretrain.pth)** the model and mount it to your Docker. 
 
-### 3. Post-Process
+
+## Post-Process🪚
 After generation, the output is converted into a watertight CAD model through post-processing:
 ```
 export TYPE="generation_type"
@@ -155,11 +166,11 @@ The available options for `TYPE` are the same as mentioned previously.
 
 You can find model folders containing a `.step` file in the `outputs/${TYPE}_post` folder.
 
-## Inference
+# Inference🖨️
 
 WIP
 
-## Evaluation
+# Evaluation🧮
 ### 1. Unconditional
 To evaluate unconditional results:
 ```
@@ -181,7 +192,40 @@ bash eval/eval_cond.sh
 ```
 You can find the evaluation results in the `outputs` folder as well.
 
-## Citation
+### 3. LFD
+
+1. Compile the files for light fild distance
+```
+cd eval/lfd/evaluation_scripts/load_data
+bash do_all.sh
+cd ../..
+git clone https://github.com/kacperkan/light-field-distance
+cd light-field-distance
+bash compile.sh
+python setup.py install
+cd ..
+```
+
+2. To Calculate LFD, we need a virtual displayer to render objects:
+```
+X -config evaluation_scripts/compute_lfd_feat/dummy-1920x1080.conf
+```
+3. To have access to the virtual displayer we have to indicate where it is in a **new terminal**:
+```
+export DISPLAY=:0
+```
+
+4. Return to the root directory and specify the generation `TYPE` you want to evaluate:
+```
+cd ../..
+export TYPE=""
+bash eval/eval_lfd.sh
+```
+
+You can check the visualized LFD result in the `outputs` folder.
+
+
+# Citation📃
 If you find our project useful, hope you can star our repo and cite our paper as follows:
 ```
 

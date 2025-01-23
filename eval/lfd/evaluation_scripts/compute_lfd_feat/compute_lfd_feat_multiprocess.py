@@ -36,9 +36,9 @@ def load_mesh_v(mesh_name, normalized_scale=0.9):
         mesh_1 = kal.io.obj.import_mesh(mesh_name)
         vertices = mesh_1.vertices.cpu().numpy()
         mesh_f1 = mesh_1.faces.cpu().numpy()
-    elif mesh_name.endswith('ply'):
-        vertices, mesh_f1 = pcu.load_mesh_vf(mesh_name)
-    elif mesh_name.endswith('stl'):
+    # elif mesh_name.endswith('ply'):
+    #     vertices, mesh_f1 = pcu.load_mesh_vf(mesh_name)
+    elif mesh_name.endswith('stl') or mesh_name.endswith('ply'):
         mesh = trimesh.load_mesh(mesh_name, force='mesh')
         if isinstance(mesh, trimesh.Scene):
             # we lose texture information here
@@ -152,7 +152,7 @@ if __name__ == "__main__":
         files = glob.glob(os.path.join(args.gen_path, folder, args.prefix))
         if len(files) == 0:
             continue
-        models.append(os.path.join(args.gen_path, folder, files[0]))
+        models.append(os.path.abspath(files[0]))
     models.sort()
     print(f"Loading {len(models)} models")
-    compute_lfd_feture(models, num_cpus, args.save_path)
+    compute_lfd_feture(models, num_cpus, os.path.abspath(args.save_path))

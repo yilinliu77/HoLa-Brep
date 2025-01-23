@@ -1,7 +1,7 @@
 # Eval
 python -m eval.sample_points --data_root ./outputs/unconditional_post --out_root ./outputs/unconditional_pcd --valid;
 python -m eval.eval_brepgen --real ./data/organized_data --fake ./outputs/unconditional_pcd;
-python -m eval.eval_complexity --eval_root ./outputs/unconditional_post --use_ray
+python -m eval.eval_complexity --eval_root ./outputs/unconditional_post --only_valid;
 python -m eval.eval_condition \
     --eval_root ./outputs/unconditional_post \
     --gt_root ./data/organized_data/ \

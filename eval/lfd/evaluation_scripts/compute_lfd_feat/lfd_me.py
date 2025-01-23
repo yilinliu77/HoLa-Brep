@@ -22,8 +22,7 @@ import numpy as np
 import trimesh
 
 SIMILARITY_TAG = b"SIMILARITY:"
-CURRENT_DIR = Path(__file__).parent
-CURRENT_DIR = '/root/repo/python/thirdparty/light-field-distance/lfd/Executable'
+CURRENT_DIR = Path(__file__).parent.parent.parent / 'light-field-distance/lfd/Executable'
 
 GENERATED_FILES_NAMES = [
     "all_q4_v1.8.art",
@@ -102,12 +101,15 @@ class MeshEncoder:
             os.system(
                 'cp %s %s' % (os.path.join(CURRENT_DIR, f),
                               os.path.join(run_dir, f)))
+        env = os.environ.copy()
+        env["DISPLAY"] = ":0"
         process = subprocess.Popen(
             ['./3DAlignment', self.temp_path.with_suffix("").as_posix()],
             cwd=run_dir,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
+            env=env
         )
 
         output, err = process.communicate()
